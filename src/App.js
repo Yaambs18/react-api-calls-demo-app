@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
 
 let interval = null;
+
 function App() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchMoviesHandler() {
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://swapi-node.vercel.app/api/film-s');
+      const response = await fetch('https://swapi-node.vercel.app/api/films');
   
       if(!response.ok) {
         throw new Error("Something went wrong.... Retrying")
@@ -35,8 +36,13 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
 
+  
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
+  
   function cancelRetryHandler() {
     console.log(clearInterval(interval));
   }
