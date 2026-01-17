@@ -1,0 +1,21 @@
+.movie-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 10px;
+    padding: 10px;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-item label {
+    text-align: left;
+}
+
+.button {
+    max-width: 120px;
+}

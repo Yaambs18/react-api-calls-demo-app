@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
+import MovieForm from './components/MovieForm';
 
 let interval = null;
 
@@ -47,8 +48,15 @@ function App() {
     console.log(clearInterval(interval));
   }
 
+  function addMovieHandler(movie) {
+    console.log(movie);
+  }
+
   return (
     <React.Fragment>
+      <section>
+        <MovieForm onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
         <button onClick={cancelRetryHandler}>Cancel Retry</button>
