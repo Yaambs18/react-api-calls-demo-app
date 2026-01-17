@@ -18,3 +18,15 @@
   margin: 0;
   font-size: 1rem;
 }
+
+.movie button {
+  background-color: #ff0000;
+  color: #230052;
+  box-shadow: 0 4px 14px rgba(255, 0, 0, 0.205);
+  border: none;
+}
+
+.movie button:hover,
+.movie button:active {
+  background-color: #ff0000bd;
+}

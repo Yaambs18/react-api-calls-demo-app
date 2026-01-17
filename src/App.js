@@ -5,6 +5,7 @@ import './App.css';
 import MovieForm from './components/MovieForm';
 
 let interval = null;
+const FIREBASE_URL = process.env.REACT_APP_FIREBASE_DATABASE_URL;
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -15,21 +16,25 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://swapi-node.vercel.app/api/films');
+      const response = await fetch(`${FIREBASE_URL}movies.json`);
   
       if(!response.ok) {
         throw new Error("Something went wrong.... Retrying")
       }
       const data = await response.json();
-      const transformedMovies = data.results.map(result => {
-        return {
-          id: result.fields.episode_id,
-          title: result.fields.title,
-          openingText: result.fields.opening_crawl,
-          releaseDate: result.fields.release_date
-        }
-      })
-      setMovies(transformedMovies);
+
+      const loadedMovies = [];
+
+      for (const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate
+        })
+      }
+      
+      setMovies(loadedMovies);
     } catch (error) {
       setError(error.message);
       clearInterval(interval);
@@ -48,8 +53,35 @@ function App() {
     console.log(clearInterval(interval));
   }
 
-  function addMovieHandler(movie) {
-    console.log(movie);
+  async function addMovieHandler(movie) {
+    // console.log(movie);
+    try {
+      const response = await fetch(`${FIREBASE_URL}movies.json`, {
+        method: 'POST',
+        body: JSON.stringify(movie),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      await response.json();
+      fetchMoviesHandler();
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  async function deleteMovieHandler(id) {
+    try {
+      const response = await fetch(`${FIREBASE_URL}movies/${id}.json`, {
+        method: 'DELETE'
+      })
+  
+      await response.json();
+      fetchMoviesHandler()
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -62,7 +94,7 @@ function App() {
         <button onClick={cancelRetryHandler}>Cancel Retry</button>
       </section>
       <section>
-        { !isLoading && <MoviesList movies={movies} /> }
+        { !isLoading && <MoviesList movies={movies} deleteMovieHandler={deleteMovieHandler}/> }
         { !isLoading && movies.length === 0 && !error && <p>No movies found.</p> }
         { isLoading && <div className="container"><div className="loader"/></div> }
         { !isLoading && error && <p>{error}</p>}
