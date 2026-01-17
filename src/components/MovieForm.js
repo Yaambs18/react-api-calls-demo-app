@@ -11,34 +11,14 @@ const initialState = {
 const MovieForm = (props) => {
     const [formObj, setFormObj] = useState(initialState);
 
-    const titleChangeHandler = (event) => {
-        const title = event.target.value;
+    const inputChangeHandler = (event) => {
+        const { name, value } = event.target;
         setFormObj(prevState => {
             return {
                 ...prevState,
-                title
+                [name]: value
             }
-        });
-    }
-
-    const openingTextChangeHandler = (event) => {
-        const openingText = event.target.value;
-        setFormObj(prevState => {
-            return {
-                ...prevState,
-                openingText
-            }
-        });
-    }
-
-    const releaseDateChangeHandler = (event) => {
-        const releaseDate = event.target.value;
-        setFormObj(prevState => {
-            return {
-                ...prevState,
-                releaseDate
-            }
-        });
+        })
     }
 
     const addFormHandler = (event) => {
@@ -54,18 +34,23 @@ const MovieForm = (props) => {
                 <input 
                     placeholder="Title" 
                     name="title" 
-                    id="titile" 
+                    id="title" 
                     type="text" 
-                    onChange={titleChangeHandler}
+                    onChange={inputChangeHandler}
+                    value={formObj.title}
                 />
             </div>
             <div className="form-item">
                 <label>Opening Text</label>
-                <input placeholder="Opening Text" name="openingText" id="openingText" type="text-area" onChange={openingTextChangeHandler} />
+                <input placeholder="Opening Text" name="openingText" id="openingText" type="textarea" onChange={inputChangeHandler}
+                    value={formObj.openingText}
+                />
             </div>
             <div className="form-item">
                 <label>Release Date</label>
-                <input name="releaseDate" id="releaseDate" type="date" onChange={releaseDateChangeHandler}/>
+                <input name="releaseDate" id="releaseDate" type="date" onChange={inputChangeHandler}
+                    value={formObj.releaseDate}
+                />
             </div>
             <button className="button" type="submit">Submit</button>
         </form>
